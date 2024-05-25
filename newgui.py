@@ -40,6 +40,8 @@ class RSAApp:
         ttk.Label(tab, text="Input Text to Encrypt").pack(pady=10)
         self.encrypt_text = tk.Text(tab, height=10, width=50)
         self.encrypt_text.pack(pady=10)
+        self.public_key_label = ttk.Label(tab, text="No public key selected")
+        self.public_key_label.pack(pady=10)
         ttk.Button(tab, text="Choose Public Key", command=self.choose_public_key).pack(pady=10)
         ttk.Button(tab, text="Encrypt", command=self.encrypt_message).pack(pady=10)
         self.encrypted_output = tk.Text(tab, height=10, width=50)
@@ -49,6 +51,8 @@ class RSAApp:
         ttk.Label(tab, text="Input Encrypted Text").pack(pady=10)
         self.decrypt_text = tk.Text(tab, height=10, width=50)
         self.decrypt_text.pack(pady=10)
+        self.private_key_label = ttk.Label(tab, text="No private key selected")
+        self.private_key_label.pack(pady=10)
         ttk.Button(tab, text="Choose Private Key", command=self.choose_private_key).pack(pady=10)
         ttk.Button(tab, text="Decrypt", command=self.decrypt_message).pack(pady=10)
         self.decrypted_output = tk.Text(tab, height=10, width=50)
@@ -81,6 +85,7 @@ class RSAApp:
     def choose_public_key(self):
         self.public_key_path = filedialog.askopenfilename(title="Select Public Key", filetypes=[("PEM files", "*.pem")])
         if self.public_key_path:
+            self.public_key_label.config(text=f"Public Key: {self.public_key_path}")
             messagebox.showinfo("Selected", f"Public Key: {self.public_key_path}")
 
     def encrypt_message(self):
@@ -98,6 +103,7 @@ class RSAApp:
     def choose_private_key(self):
         self.private_key_path = filedialog.askopenfilename(title="Select Private Key", filetypes=[("PEM files", "*.pem")])
         if self.private_key_path:
+            self.private_key_label.config(text=f"Private Key: {self.private_key_path}")
             messagebox.showinfo("Selected", f"Private Key: {self.private_key_path}")
 
     def decrypt_message(self):
