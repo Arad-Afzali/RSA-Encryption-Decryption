@@ -30,11 +30,11 @@ class RSAApp:
         tab_control.pack(expand=1, fill="both")
 
     def create_generate_keys_tab(self, tab):
-        ttk.Label(tab, text="Generate RSA Keys").pack(pady=10)
-        ttk.Button(tab, text="Generate Keys", command=self.generate_keys_thread).pack(pady=10)
         self.key_folder_label = ttk.Label(tab, text="No folder selected")
         self.key_folder_label.pack(pady=10)
         ttk.Button(tab, text="Choose Destination Folder", command=self.choose_key_folder).pack(pady=10)
+        ttk.Label(tab, text="Generate RSA Keys").pack(pady=10)
+        ttk.Button(tab, text="Generate Keys", command=self.generate_keys_thread).pack(pady=10)
 
     def create_encrypt_tab(self, tab):
         ttk.Label(tab, text="Input Text to Encrypt").pack(pady=10)
@@ -68,7 +68,7 @@ class RSAApp:
         if hasattr(self, 'key_folder'):
             try:
                 generate_keys(self.key_folder)
-                self.show_message("Success", "Keys generated and saved.")
+                self.show_message("Success", "Keys generated and saved. MAKE SURE YOU SAVE THEM SECURELY")
             except Exception as e:
                 self.show_message("Error", f"Failed to generate keys: {e}")
         else:

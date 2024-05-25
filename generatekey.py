@@ -3,7 +3,7 @@ import os
 
 def generate_keys(folder):
     os.makedirs(folder, exist_ok=True)
-    key = RSA.generate(4096)
+    key = RSA.generate(3072)
     private_key = key.export_key()
     public_key = key.publickey().export_key()
 
