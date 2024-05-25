@@ -8,6 +8,10 @@ def encrypt_message(message, public_key_path):
     cipher = PKCS1_OAEP.new(public_key)
     encrypted_message = cipher.encrypt(message.encode())
     
+    # Overwrite and delete sensitive data
+    message = '\x00' * len(message)
+    del message, public_key, cipher
+
     return encrypted_message
 
 if __name__ == "__main__":

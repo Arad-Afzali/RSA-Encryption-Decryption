@@ -13,6 +13,11 @@ def generate_keys(folder):
     with open(os.path.join(folder, 'public_key.pem'), 'wb') as pub_file:
         pub_file.write(public_key)
 
+    # Overwrite and delete sensitive data
+    private_key = b'\x00' * len(private_key)
+    public_key = b'\x00' * len(public_key)
+    del private_key, public_key, key
+
     print("Keys generated and saved.")
 
 if __name__ == "__main__":
