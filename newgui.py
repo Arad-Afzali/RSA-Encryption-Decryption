@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
+import threading
 from generatekey import generate_keys
 from encrypt import encrypt_message
 from decrypt import decrypt_message
@@ -29,11 +30,11 @@ class RSAApp:
         tab_control.pack(expand=1, fill="both")
 
     def create_generate_keys_tab(self, tab):
+        ttk.Label(tab, text="Generate RSA Keys").pack(pady=10)
+        ttk.Button(tab, text="Generate Keys", command=self.generate_keys_thread).pack(pady=10)
         self.key_folder_label = ttk.Label(tab, text="No folder selected")
         self.key_folder_label.pack(pady=10)
         ttk.Button(tab, text="Choose Destination Folder", command=self.choose_key_folder).pack(pady=10)
-        ttk.Label(tab, text="Generate RSA Keys").pack(pady=10)
-        ttk.Button(tab, text="Generate Keys", command=self.generate_keys).pack(pady=10)
 
     def create_encrypt_tab(self, tab):
         ttk.Label(tab, text="Input Text to Encrypt").pack(pady=10)
@@ -59,12 +60,23 @@ class RSAApp:
             self.key_folder = folder
             self.key_folder_label.config(text=self.key_folder)
 
+    def generate_keys_thread(self):
+        thread = threading.Thread(target=self.generate_keys)
+        thread.start()
+
     def generate_keys(self):
         if hasattr(self, 'key_folder'):
-            generate_keys(self.key_folder)
-            messagebox.showinfo("Success", "Keys generated and saved.")
+            try:
+                generate_keys(self.key_folder)
+                self.show_message("Success", "Keys generated and saved.")
+            except Exception as e:
+                self.show_message("Error", f"Failed to generate keys: {e}")
         else:
-            messagebox.showerror("Error", "Please choose a destination folder first.")
+            self.show_message("Error", "Please choose a destination folder first.")
+
+    def show_message(self, title, message):
+        # Ensure that message box is called from the main thread
+        self.root.after(0, lambda: messagebox.showinfo(title, message))
 
     def choose_public_key(self):
         self.public_key_path = filedialog.askopenfilename(title="Select Public Key", filetypes=[("PEM files", "*.pem")])
@@ -74,9 +86,12 @@ class RSAApp:
     def encrypt_message(self):
         message = self.encrypt_text.get("1.0", tk.END).strip()
         if hasattr(self, 'public_key_path') and message:
-            encrypted_message = encrypt_message(message, self.public_key_path)
-            self.encrypted_output.delete("1.0", tk.END)
-            self.encrypted_output.insert(tk.END, encrypted_message.hex())
+            try:
+                encrypted_message = encrypt_message(message, self.public_key_path)
+                self.encrypted_output.delete("1.0", tk.END)
+                self.encrypted_output.insert(tk.END, encrypted_message.hex())
+            except Exception as e:
+                messagebox.showerror("Error", f"Encryption failed: {e}")
         else:
             messagebox.showerror("Error", "Please select a public key and enter a message to encrypt.")
 
@@ -88,9 +103,12 @@ class RSAApp:
     def decrypt_message(self):
         encrypted_message = bytes.fromhex(self.decrypt_text.get("1.0", tk.END).strip())
         if hasattr(self, 'private_key_path') and encrypted_message:
-            decrypted_message = decrypt_message(encrypted_message, self.private_key_path)
-            self.decrypted_output.delete("1.0", tk.END)
-            self.decrypted_output.insert(tk.END, decrypted_message)
+            try:
+                decrypted_message = decrypt_message(encrypted_message, self.private_key_path)
+                self.decrypted_output.delete("1.0", tk.END)
+                self.decrypted_output.insert(tk.END, decrypted_message)
+            except Exception as e:
+                messagebox.showerror("Error", f"Decryption failed: {e}")
         else:
             messagebox.showerror("Error", "Please select a private key and enter a message to decrypt.")
 
