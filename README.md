@@ -67,6 +67,16 @@ When you generate keys, the private key is saved as `private_key.pem` and the pu
 - **Encryption Safety**: Be aware that if the private key file is compromised, the security of the encrypted messages is also compromised.
 - **Manual Key Management**: The text encryption keys are not saved anywhere else by the application. Users must manually save these keys and ensure their security. If the key is lost, the encrypted text cannot be decrypted.
 
+## Sending Keys Securely
+
+For sending keys securely, users can encrypt them using the following project:
+
+# AES Encryption and Decryption Project
+
+This project provides a graphical user interface (GUI) for encrypting and decrypting text using AES (Advanced Encryption Standard) encryption. The application supports key generation, text encryption using Public key, and text decryption using private key.
+
+**Project Link:** [RSA Encryption and Decryption](https://github.com/Arad-Afzali/RSA-Encryption-Decryption)
+
 ## Dependencies
 
 The project requires the following Python packages, listed in `requirements.txt`:
